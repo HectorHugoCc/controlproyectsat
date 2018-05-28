@@ -14,7 +14,7 @@ local.properties
 .settings/
 .loadpath
 .recommenders
-
+src/main/webapp/WEB-INF/.faces-config.xml.jsfdia
 # External tool builders
 .externalToolBuilders/
 
