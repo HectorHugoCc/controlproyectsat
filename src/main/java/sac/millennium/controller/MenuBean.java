@@ -6,8 +6,8 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
+import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
 import org.primefaces.event.CellEditEvent;
@@ -25,7 +25,7 @@ import sac.millennium.service.impl.MenuServiceImpl;
 import sac.millennium.service.impl.PerfilServiceImpl;
 
 @ManagedBean
-@SessionScoped
+@ApplicationScoped
 public class MenuBean implements Serializable {
 
 	private static final long serialVersionUID = -4656629421354393217L;
@@ -47,6 +47,7 @@ public class MenuBean implements Serializable {
 	private List<Menu> listaSubmenuEdit;
 	private List<Menu> listaItemEdit;
 	private Menu menu;
+	private Menu submenuSeleccionado;
 	private String tipoMenu;// submenu | item
 	private String perfil;
 	private String padre;// contenedor padre
@@ -54,6 +55,13 @@ public class MenuBean implements Serializable {
 
 	@PostConstruct
 	public void init() {
+		tipoMenu = Menu.SUBMENU;
+		padre = "0";
+		hijo = "0";
+		this.menu = new Menu();
+		this.submenuSeleccionado = new Menu();
+		this.menu.setFormularioAsociado("#");
+		this.menu.setContenedor("0");
 		listamenu = new ArrayList<>();
 		listaPadres = new ArrayList<>();
 		listaHijos = new ArrayList<>();
@@ -66,17 +74,13 @@ public class MenuBean implements Serializable {
 		listarTodo();
 		listarPerfiles();
 		listarPadres();
-		tipoMenu = Menu.SUBMENU;
-		padre = "0";
-		hijo = "0";
-		this.menu = new Menu();
-		this.menu.setFormularioAsociado("#");
-		this.menu.setContenedor("0");
 	}
 
 	public void guardar() {
 		System.out.println("MENU_BEAN>>Guardando..." + this.menu);
 		servMenu.create(menu);
+		FacesContext.getCurrentInstance().addMessage(null,
+				new FacesMessage(FacesMessage.SEVERITY_INFO, "Informacion", "Registrado"));
 	}
 
 	public void editar() {
@@ -101,18 +105,6 @@ public class MenuBean implements Serializable {
 	}
 
 	public void listarHermanos() {// items y submenu del mismo nivel (para listar el combo de opciones)
-		// if (tipoMenu.equalsIgnoreCase(Menu.ITEM)) {
-		// if (hijo.equals("0")) {
-		// menu.setContenedor(padre);
-		// } else {
-		// menu.setContenedor(hijo);
-		// }
-		// } else {
-		// menu.setContenedor(padre);
-		// }
-		// listaHermanos = menu.getContenedor().equals("0") ?
-		// servMenu.listaContenedoresHermanos()
-		// : servMenu.listaHermanos(menu);
 		if (tipoMenu.equalsIgnoreCase(Menu.SUBMENU)) {
 			listaHermanos = servMenu.listaContenedoresHermanos();
 		} else {
@@ -265,6 +257,14 @@ public class MenuBean implements Serializable {
 
 	public void setListaItemEdit(List<Menu> listaItemEdit) {
 		this.listaItemEdit = listaItemEdit;
+	}
+
+	public Menu getSubmenuSeleccionado() {
+		return submenuSeleccionado;
+	}
+
+	public void setSubmenuSeleccionado(Menu submenuSeleccionado) {
+		this.submenuSeleccionado = submenuSeleccionado;
 	}
 
 }

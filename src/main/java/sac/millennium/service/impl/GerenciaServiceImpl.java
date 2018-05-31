@@ -22,6 +22,8 @@ public class GerenciaServiceImpl implements IGerenciaService {
 
 	@Override
 	public int create(Gerencia obj) {
+		String id = generarId();
+		obj.setId(id);
 		return dao.create(obj);
 	}
 
@@ -42,14 +44,17 @@ public class GerenciaServiceImpl implements IGerenciaService {
 
 	@Override
 	public String generarId() {
-		// TODO Auto-generated method stub
-		return null;
+		return dao.generarId();
 	}
 
 	@Override
 	public List<Gerencia> findByGerenciaCentral(GerenciaCentral gerenciaCentral) {
-		// TODO Auto-generated method stub
 		return dao.findByGerenciaCentral(gerenciaCentral);
+	}
+
+	@Override
+	public List<Gerencia> findAllDescripcion() {
+		return dao.findAllDescripcion();
 	}
 
 }

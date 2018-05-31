@@ -15,8 +15,8 @@ import sac.millennium.util.Conexion;
 public class PuestoSqlserverDAOImpl implements IPuestoDAO {
 
 	private Connection cx;
-	private ResultSet rs = null;
-	private PreparedStatement pstm = null;
+	private ResultSet rs;
+	private PreparedStatement pstm;
 
 	public PuestoSqlserverDAOImpl() {
 		cx = Conexion.conectar();

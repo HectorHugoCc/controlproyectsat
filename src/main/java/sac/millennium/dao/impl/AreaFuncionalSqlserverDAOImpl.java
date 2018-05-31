@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Formatter;
 import java.util.List;
 
 import sac.millennium.dao.IAreaFuncionalDAO;
@@ -41,6 +42,46 @@ public class AreaFuncionalSqlserverDAOImpl implements IAreaFuncionalDAO {
 
 				Gerencia ge = new Gerencia();
 				ge.setId(rs.getString("id_gerencia"));
+				ge.setGerenciaCentral(gc);
+
+				obj.setGerencia(ge);
+
+				obj.setId(rs.getString("id_area_funcional"));
+				obj.setCodigoPropio(rs.getString("codigo_area_func_centro_costo_propio"));
+				obj.setDescripcion(rs.getString("descripcion_area_func"));
+				obj.setDescripcionCorta(rs.getString("descripcion_corta_area_func"));
+				obj.setEstado(rs.getString("estado_area_func"));
+				lista.add(obj);
+			}
+			cerrarRecursos();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return lista;
+	}
+
+	@Override
+	public List<AreaFuncional> findAllDescripcion() {
+		List<AreaFuncional> lista = new ArrayList<>();
+		AreaFuncional obj = null;
+		try {
+			String sql = "\r\n" + "  select gc.descripcion_gerencia_c,g.descripcion_gerencia,are.id_area_funcional,\r\n"
+					+ "		are.codigo_area_func_centro_costo_propio,are.descripcion_area_func,\r\n"
+					+ "		are.descripcion_corta_area_func,are.estado_area_func \r\n"
+					+ "		from area_funcional are inner join gerencia_central gc\r\n"
+					+ "  on are.id_gerencia_c=gc.id_gerencia_c inner join gerencia g\r\n"
+					+ "  on are.id_gerencia=g.id_gerencia";
+			pstm = cx.prepareStatement(sql);
+			rs = pstm.executeQuery();
+
+			while (rs.next()) {
+				obj = new AreaFuncional();
+
+				GerenciaCentral gc = new GerenciaCentral();
+				gc.setDescripcion(rs.getString("descripcion_gerencia_c"));
+
+				Gerencia ge = new Gerencia();
+				ge.setDescripcion(rs.getString("descripcion_gerencia"));
 				ge.setGerenciaCentral(gc);
 
 				obj.setGerencia(ge);
@@ -166,8 +207,22 @@ public class AreaFuncionalSqlserverDAOImpl implements IAreaFuncionalDAO {
 
 	@Override
 	public String generarId() {
+		String id = "";
+		Formatter fmt = new Formatter();
+		try {
+			String sql = "select id_area_funcional from area_funcional order by id_area_funcional desc;";
+			pstm = cx.prepareStatement(sql);
+			rs = pstm.executeQuery();
 
-		return null;
+			if (rs.next()) {
+				id = String.valueOf(fmt.format("%04d", Integer.parseInt(rs.getString("id_area_funcional")) + 1));
+			}
+			cerrarRecursos();
+			fmt.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return id;
 	}
 
 	@Override

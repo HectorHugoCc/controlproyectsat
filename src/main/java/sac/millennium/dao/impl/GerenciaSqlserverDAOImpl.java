@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Formatter;
 import java.util.List;
 
 import sac.millennium.dao.IGerenciaDAO;
@@ -35,6 +36,39 @@ public class GerenciaSqlserverDAOImpl implements IGerenciaDAO {
 
 				GerenciaCentral gc = new GerenciaCentral();
 				gc.setId(rs.getString("id_gerencia_c"));
+				obj.setGerenciaCentral(gc);
+
+				obj.setId(rs.getString("id_gerencia"));
+				obj.setCodigoPropio(rs.getString("codigo_gerencia_propio"));
+				obj.setDescripcion(rs.getString("descripcion_gerencia"));
+				obj.setDescripcionCorta(rs.getString("descripcion_corta_gerencia"));
+				obj.setEstado(rs.getString("estado_gerencia"));
+
+				lista.add(obj);
+			}
+			cerrarRecursos();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return lista;
+	}
+
+	@Override
+	public List<Gerencia> findAllDescripcion() {
+		List<Gerencia> lista = new ArrayList<>();
+		try {
+			Gerencia obj;
+			String sql = "  select gc.descripcion_gerencia_c,g.id_gerencia,g.codigo_gerencia_propio,\r\n"
+					+ "		g.descripcion_gerencia,g.descripcion_corta_gerencia,g.estado_gerencia \r\n"
+					+ "		from gerencia g inner join gerencia_central gc \r\n"
+					+ "		 on g.id_gerencia_c=gc.id_gerencia_c";
+			pstm = cx.prepareStatement(sql);
+			rs = pstm.executeQuery();
+			while (rs.next()) {
+				obj = new Gerencia();
+
+				GerenciaCentral gc = new GerenciaCentral();
+				gc.setDescripcion(rs.getString("descripcion_gerencia_c"));
 				obj.setGerenciaCentral(gc);
 
 				obj.setId(rs.getString("id_gerencia"));
@@ -152,8 +186,22 @@ public class GerenciaSqlserverDAOImpl implements IGerenciaDAO {
 
 	@Override
 	public String generarId() {
+		String id = "";
+		Formatter fmt = new Formatter();
+		try {
+			String sql = "select id_gerencia from gerencia order by id_gerencia desc;";
+			pstm = cx.prepareStatement(sql);
+			rs = pstm.executeQuery();
 
-		return null;
+			if (rs.next()) {
+				id = String.valueOf(fmt.format("%04d", Integer.parseInt(rs.getString("id_gerencia")) + 1));
+			}
+			cerrarRecursos();
+			fmt.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return id;
 	}
 
 	@Override

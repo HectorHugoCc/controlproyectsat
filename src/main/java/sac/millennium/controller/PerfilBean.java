@@ -54,8 +54,6 @@ public class PerfilBean implements Serializable {
 				+ "--" + perfilSeleccionado.getDescripcionCorta() + "--" + perfilSeleccionado.getEstado());
 
 		servPerfil.create(perfilSeleccionado);
-
-		// listarTodo();
 	}
 
 	public void elimina() {

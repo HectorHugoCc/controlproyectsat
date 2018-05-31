@@ -22,6 +22,8 @@ public class AreaFuncionalServiceImpl implements IAreaFuncionalService {
 
 	@Override
 	public int create(AreaFuncional obj) {
+		String id = generarId();
+		obj.setId(id);
 		return dao.create(obj);
 	}
 
@@ -42,14 +44,18 @@ public class AreaFuncionalServiceImpl implements IAreaFuncionalService {
 
 	@Override
 	public String generarId() {
-
-		return null;
+		return dao.generarId();
 	}
 
 	@Override
 	public List<AreaFuncional> findByGerencia(Gerencia gerencia) {
 
 		return dao.findByGerencia(gerencia);
+	}
+
+	@Override
+	public List<AreaFuncional> findAllDescripcion() {
+		return dao.findAllDescripcion();
 	}
 
 }

@@ -10,4 +10,6 @@ public interface IGerenciaDAO extends IGenericCRUD<Gerencia, String> {
 
 	public List<Gerencia> findByGerenciaCentral(GerenciaCentral gerenciaCentral);
 
+	public List<Gerencia> findAllDescripcion();
+
 }

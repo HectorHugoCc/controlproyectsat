@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+
+<ui:composition template="/WEB-INF/templates/uiConMenu.xhtml">
+	<ui:define name="pageTitle">Gerencia</ui:define>
+	<ui:define name="pageHeader"></ui:define>
+	<ui:define name="body">
+		<h:form id="listaGerencia">
+
+			<p:fieldset legend="Gerencia">
+
+				<p:panelGrid columns="6">
+					<p:dataTable id="tblGerencia" value="#{gerenciaBean.listaGerencia}"
+						var="ger" selectionMode="single" rowKey="#{ger.id}"
+						editable="true" style="margin-bottom:20px" paginator="true"
+						rows="5" widgetVar="cell_ger"
+						paginatorTemplate="	{FirstPageLink}
+					{LastPageLink}
+					{PreviousPageLink}
+					{NextPageLink}
+					{PageLinks}
+					{CurrentPageReport}
+					{RowsPerPageDropdown} "
+						scrollable="true" rowsPerPageTemplate="1, 3, 5"
+						currentPageReportTemplate="Página: ({currentPage}/{totalPages})">
+						<f:facet name="header"> Lista Gerencia</f:facet>
+
+						<p:column headerText="Gerencia Central">
+							<h:outputText value="#{ger.gerenciaCentral.descripcion}" />
+						</p:column>
+
+						<p:column headerText="Id">
+							<h:outputText value="#{ger.id}" />
+						</p:column>
+
+						<p:column headerText="Codigo">
+							<h:outputText value="#{ger.codigoPropio}" />
+						</p:column>
+
+						<p:column headerText="Descripcion">
+							<h:outputText value="#{ger.descripcion}" />
+						</p:column>
+
+						<p:column headerText="Descripcion Corta">
+							<h:outputText value="#{ger.descripcionCorta}" />
+						</p:column>
+
+						<p:column headerText="Estado">
+							<h:outputText
+								value="#{ger.estado==1?'Habilitado':'Deshabilitado'}" />
+						</p:column>
+
+
+					</p:dataTable>
+				</p:panelGrid>
+
+				<p:commandButton type="button" value="Crear Gerencia" id="crearBtn"
+					onclick="PF('gerencia_create').show()"></p:commandButton>
+
+
+			</p:fieldset>
+		</h:form>
+
+		<p:dialog closeOnEscape="true" widgetVar="gerencia_create"
+			autoupdate="true" showEffect="clip" hideEffect="drop" width="800"
+			footer="Crear Nueva Gerencia">
+			<h:form id="crearGerencia">
+
+				<p:growl id="msgs" showDetail="true" life="2000"></p:growl>
+
+				<p:fieldset legend="Crear Gerencia">
+					<h:panelGrid columns="3">
+
+						<h:outputLabel value="Gerencia Central" for="cboGerenciaCent" />
+						<p:selectOneMenu id="cboGerenciaCent"
+							value="#{gerenciaBean.idGerenciaCentral}">
+							<f:selectItem itemLabel="Seleccione" itemValue=" " />
+							<f:selectItems value="#{gerenciaBean.listaGerenciaCentral}"
+								var="gece" itemLabel="#{gece.descripcion}"
+								itemValue="#{gece.id}" />
+						</p:selectOneMenu>
+						<p:message for="cboGerenciaCent"></p:message>
+
+
+						<p:outputLabel value="Codigo" for="text_cod" />
+						<p:inputText id="text_cod"
+							value="#{gerenciaBean.gerenciaSeleccionada.codigoPropio}"
+							style="width: 200px;" required="true"
+							requiredMessage="Completar Codigo" />
+						<p:message for="text_cod" />
+
+						<p:outputLabel value="Descripcion" for="text_des" />
+						<p:inputText id="text_des"
+							value="#{gerenciaBean.gerenciaSeleccionada.descripcion}"
+							style="width: 200px;" required="true"
+							requiredMessage="Completar Descripcion" />
+						<p:message for="text_des" />
+
+						<p:outputLabel value="Descripcion Corta" for="text_desCor" />
+						<p:inputText id="text_desCor"
+							value="#{gerenciaBean.gerenciaSeleccionada.descripcionCorta}"
+							style="width: 200px;" required="true"
+							requiredMessage="Completar Descripcion Corta" />
+						<p:message for="text_desCor" />
+
+
+						<p:outputLabel value="Estado" for="tipoEstado"></p:outputLabel>
+						<p:selectOneMenu id="tipoEstado"
+							value="#{gerenciaBean.gerenciaSeleccionada.estado}">
+							<f:selectItem itemLabel="Habilitado" itemValue="1" />
+							<f:selectItem itemLabel="Deshabilitado" itemValue="0" />
+						</p:selectOneMenu>
+						<p:message for="tipoEstado"></p:message>
+
+						<p:commandButton value="Registrar"
+							actionListener="#{gerenciaBean.registra()}"
+							oncomplete="if(!args.validationFailed) PF('gerencia_create').hide()"
+							update="#{gerenciaBean.listarTodo()}" inmediate="true">
+							<p:ajax rendered="listaGerencia:tblGerencia"></p:ajax>
+						</p:commandButton>
+
+
+
+					</h:panelGrid>
+				</p:fieldset>
+			</h:form>
+		</p:dialog>
+	</ui:define>
+</ui:composition>
+</html>

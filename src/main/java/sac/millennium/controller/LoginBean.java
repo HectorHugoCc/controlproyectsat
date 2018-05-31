@@ -69,7 +69,6 @@ public class LoginBean implements Serializable {
 
 	public void login(ActionEvent event) {
 		FacesMessage message = null;
-
 		this.usuario = service.iniciarSesion(this.usuario);
 
 		if (this.usuario != null) {
@@ -81,14 +80,14 @@ public class LoginBean implements Serializable {
 			FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("usuario", usuario);
 			loggedIn = true;
 			message = new FacesMessage(FacesMessage.SEVERITY_INFO, "Bienvenido(a)", usuario.getNombre());
-			ruta = "/satcontrolproyect/view/common/principal.xhtml";
+			ruta = "/controlproyectsat/view/common/principal.xhtml";
 		} else {
 			System.out.println("Error de logeo");
 			loggedIn = false;
 			message = new FacesMessage(FacesMessage.SEVERITY_WARN, "Error de acceso",
 					"Usuario o password es incorrecto");
 			this.usuario = new Usuario();
-			ruta = "/satcontrolproyect/";
+			ruta = "/controlproyectsat/";
 		}
 		FacesContext.getCurrentInstance().addMessage(null, message);
 		PrimeFaces.current().ajax().addCallbackParam("loggedIn", loggedIn);
@@ -113,19 +112,6 @@ public class LoginBean implements Serializable {
 			if (m.getFormularioAsociado().equals("#") && m.getId().equals(m.getContenedor())) {
 				firstSubmenu = new DefaultSubMenu(m.getNombreOpcion());
 				for (Menu sm : listaMenu) {
-					// if (sm.getFormularioAsociado().equals("#") && !sm.getId().equals(m.getId()))
-					// {
-					// secondSubmenu = new DefaultSubMenu(sm.getNombreOpcion());
-					// // for (Menu ssm : listaMenu) {
-					// // if (!ssm.getFormularioAsociado().equals("#") &&
-					// // ssm.getContenedor().equals(sm.getId())) {
-					// // thirdItem = new DefaultMenuItem(ssm.getNombreOpcion());
-					// // thirdItem.setUrl(ssm.getFormularioAsociado());
-					// // secondSubmenu.addElement(thirdItem);
-					// // }
-					// // }
-					// firstSubmenu.addElement(secondSubmenu);
-					// } else {
 					if (!sm.getFormularioAsociado().equals("#") && sm.getContenedor().equals(m.getId())) {
 						if (!sm.getId().equals(m.getId())) {
 							secondItem = new DefaultMenuItem(sm.getNombreOpcion());
@@ -133,7 +119,6 @@ public class LoginBean implements Serializable {
 							firstSubmenu.addElement(secondItem);
 						}
 					}
-					// }
 				}
 				model.addElement(firstSubmenu);
 			} else {

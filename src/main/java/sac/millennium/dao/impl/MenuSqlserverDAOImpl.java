@@ -18,8 +18,8 @@ public class MenuSqlserverDAOImpl implements IMenuDAO, Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Connection cx;
-	private ResultSet rs = null;
-	private PreparedStatement pstm = null;
+	private ResultSet rs;
+	private PreparedStatement pstm;
 
 	public MenuSqlserverDAOImpl() {
 		cx = Conexion.conectar();
@@ -72,6 +72,10 @@ public class MenuSqlserverDAOImpl implements IMenuDAO, Serializable {
 				obj.setEstado(rs.getString("estado_registro_menu"));
 				lista.add(obj);
 			}
+
+			System.out.println("MENUBEAN==>> " + menu);
+			System.out.println("MENU_DAO: Lista de hermanos");
+			lista.forEach(x -> System.out.println(x));
 			cerrarRecursos();
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -273,10 +277,15 @@ public class MenuSqlserverDAOImpl implements IMenuDAO, Serializable {
 
 	private void cerrarRecursos() {
 		try {
-			if (rs != null)
+			if (rs != null) {
 				rs.close();
-			if (pstm != null)
+				rs = null;
+			}
+			if (pstm != null) {
 				pstm.close();
+				pstm = null;
+			}
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

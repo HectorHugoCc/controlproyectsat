@@ -15,8 +15,8 @@ import sac.millennium.util.Conexion;
 public class PerfilSqlserverDAOImpl implements IPerfilDAO {
 
 	private Connection cx;
-	private ResultSet rs = null;
-	private PreparedStatement pstm = null;
+	private ResultSet rs;
+	private PreparedStatement pstm;
 
 	public PerfilSqlserverDAOImpl() {
 		cx = Conexion.conectar();

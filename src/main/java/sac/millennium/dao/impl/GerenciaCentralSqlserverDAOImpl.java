@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Formatter;
 import java.util.List;
 
 import sac.millennium.dao.IGerenciaCentralDAO;
@@ -14,8 +15,8 @@ import sac.millennium.util.Conexion;
 public class GerenciaCentralSqlserverDAOImpl implements IGerenciaCentralDAO {
 
 	private Connection cx;
-	private ResultSet rs = null;
-	private PreparedStatement pstm = null;
+	private ResultSet rs;
+	private PreparedStatement pstm;
 
 	public GerenciaCentralSqlserverDAOImpl() {
 		cx = Conexion.conectar();
@@ -50,7 +51,7 @@ public class GerenciaCentralSqlserverDAOImpl implements IGerenciaCentralDAO {
 	public int create(GerenciaCentral obj) {
 		int estado = -1;
 		try {
-			String sql = "insert gerencia_central perfil values(?,?,?,?,?)";
+			String sql = "insert into gerencia_central values(?,?,?,?,?)";
 			pstm = cx.prepareStatement(sql);
 			pstm.setString(1, obj.getId());
 			pstm.setString(2, obj.getCodigoPropio());
@@ -79,6 +80,7 @@ public class GerenciaCentralSqlserverDAOImpl implements IGerenciaCentralDAO {
 
 			estado = pstm.executeUpdate();
 			cerrarRecursos();
+			System.out.println("GC_DAO: " + estado + " registros afectados.");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -123,6 +125,26 @@ public class GerenciaCentralSqlserverDAOImpl implements IGerenciaCentralDAO {
 		return obj;
 	}
 
+	@Override
+	public String generarId() {
+		String id = "";
+		Formatter fmt = new Formatter();
+		try {
+			String sql = "select id_gerencia_c from gerencia_central order by id_gerencia_c desc;";
+			pstm = cx.prepareStatement(sql);
+			rs = pstm.executeQuery();
+
+			if (rs.next()) {
+				id = String.valueOf(fmt.format("%04d", Integer.parseInt(rs.getString("id_gerencia_c")) + 1));
+			}
+			cerrarRecursos();
+			fmt.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return id;
+	}
+
 	private void cerrarRecursos() {
 		try {
 			if (rs != null)
@@ -132,12 +154,6 @@ public class GerenciaCentralSqlserverDAOImpl implements IGerenciaCentralDAO {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	@Override
-	public String generarId() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 }

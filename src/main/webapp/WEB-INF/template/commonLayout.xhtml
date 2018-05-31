@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:view contentType="text/html">
+	<h:head>
+		<title><ui:insert name="pageTitle">Page Title</ui:insert></title>
+	</h:head>
+
+	<h:body>
+		<p:layout fullPage="true" encoding="UTF-8">
+			<p:layoutUnit id="top" position="north" size="50">
+				<div style="text-align: right">
+					<h:form>
+						<h:outputLabel value="#{loginBean.usuario.nombre}" /> |
+						<h:outputLabel value="#{loginBean.usuario.correo}" />
+						<p:spacer width="20px" height="10px" />
+						<p:commandButton icon="ui-icon-key" title="Cerrar Cesion"
+							actionListener="#{loginBean.logout()}"
+							oncomplete="logout(xhr, status, args)" />
+					</h:form>
+				</div>
+			</p:layoutUnit>
+			<br />
+			<p:layoutUnit id="left" position="west" size="200" resizable="true"
+				closable="true" collapsible="true" header="Options" minSize="100">
+				<h:form id="frmMenu">
+					<p:menu model="#{loginBean.model}" toggleable="true" />
+				</h:form>
+			</p:layoutUnit>
+
+			<p:layoutUnit id="center" position="center">
+				<ui:insert name="body">Page Body</ui:insert>
+			</p:layoutUnit>
+
+		</p:layout>
+
+		<script type="text/javascript">		     
+		   function logout(xhr, status, args) {
+	   		setTimeout(function() {
+		       window.location = '/controlproyectsat/';
+		     }, 500);
+		   } 
+	   </script>
+	</h:body>
+</f:view>
+</html>

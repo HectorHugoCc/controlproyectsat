@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+
+<ui:composition template="/WEB-INF/template/commonLayout.xhtml">
+	<ui:define name="pageTitle">Menu</ui:define>
+	<ui:define name="body">
+		<!-- FRM CREAR MENU -->
+		<h:form id="frm_crear_menu">
+
+			<p:growl id="msgs" showDetail="true" />
+
+			<p:fieldset legend="CREAR MENÚ" toggleable="true" toggleSpeed="500"
+				style="margin-bottom:20px">
+				<h:panelGrid columns="4" cellpadding="5">
+					<p:outputLabel for="txt_nombre" value="Nombre:"
+						style="font-weight:bold" />
+					<p:inputText id="txt_nombre" value="#{menuBean.menu.nombreOpcion}"
+						required="true" requiredMessage="Este campo es requerido" />
+					<p:message for="txt_nombre" />
+					<p:outputLabel />
+
+					<p:outputLabel value="Estado:" style="font-weight:bold" />
+					<p:selectOneMenu id="cbo_estado" value="#{menuBean.menu.estado}">
+						<f:selectItem itemLabel="Habilitado" itemValue="1" />
+						<f:selectItem itemLabel="Deshabilitado" itemValue="0" />
+					</p:selectOneMenu>
+
+					<p:outputLabel value="Tipo:" for="txt_tip" style="font-weight:bold" />
+					<p:selectOneMenu id="txt_tip" value="#{menuBean.tipoMenu}">
+						<f:selectItem itemLabel="SubMenu" itemValue="S" />
+						<f:selectItem itemLabel="Item" itemValue="I" />
+						<f:ajax event="change" execute="cbo_estado" render="txt_url"
+							listener="#{menuBean.setURL()}" />
+						<f:ajax event="change" execute="cbo_estado" render="cbo_padres" />
+					</p:selectOneMenu>
+
+					<p:outputLabel value="Contenedor: " for="cbo_padres"
+						style="font-weight:bold" />
+					<p:selectOneMenu id="cbo_padres" value="#{menuBean.padre}"
+						disabled="#{menuBean.tipoMenu.equalsIgnoreCase('I')?false:true}">
+						<f:selectItem itemLabel="Ninguno" noSelectionOption="true"
+							itemValue="0" />
+						<f:selectItems value="#{menuBean.listaPadres}" var="men"
+							itemLabel="#{men.nombreOpcion}" itemValue="#{men.id}" />
+						<f:ajax event="change" listener="#{menuBean.listarHermanos()}"
+							execute="cbo_padres" render="cbo_orden" />
+					</p:selectOneMenu>
+
+					<p:outputLabel value="Orden: " for="cbo_orden"
+						style="font-weight:bold" />
+					<p:selectOneMenu id="cbo_orden"
+						value="#{menuBean.menu.ordenAparicion}">
+						<f:selectItem itemLabel="Primero" itemValue="0" />
+						<f:selectItem itemLabel="Último" itemValue="1" />
+						<f:selectItems value="#{menuBean.listaHermanos}" var="con"
+							itemLabel="#{con.nombreOpcion}" itemValue="#{con.ordenAparicion}" />
+					</p:selectOneMenu>
+
+					<p:outputLabel value="URL:" for="txt_url" style="font-weight:bold" />
+					<p:inputText id="txt_url"
+						disabled="#{menuBean.tipoMenu.equalsIgnoreCase('I')?false:true}"
+						value="#{menuBean.menu.formularioAsociado}" style="width: 200px"
+						required="true" requiredMessage="Completar URL!" />
+					<p:message for="txt_url" />
+					<p:outputLabel />
+
+					<p:commandButton value="Guardar" style="font-weight:bold" ajax="false"
+						actionListener="#{menuBean.guardar()}" update=":frm_crear_menu:msgs">
+						<f:ajax listener="#{menuBean.listarPadres()}" render="cbo_padres" />
+						<f:ajax listener="#{menuBean.listarHermanos()}" render="cbo_orden" />
+					</p:commandButton>
+
+					<p:commandButton value="Ver Menus" type="button"
+						onclick="PF('wv_lista_menu').show()" style="font-weight:bold">
+						<f:ajax listener="#{menuBean.listarTodo()}"
+							render=":frm_lista_menu" />
+					</p:commandButton>
+				</h:panelGrid>
+			</p:fieldset>
+		</h:form>
+		<!-- FIN FRM CREAR MENU -->
+
+		<!-- LISTAR TODO -->
+		<p:dialog closeOnEscape="true" widgetVar="wv_lista_menu"
+			showEffect="clip" hideEffect="drop" footer="Menus">
+			<h:form id="frm_lista_menu">
+				<p:dataTable value="#{menuBean.listamenu}" var="men"
+					paginatorPosition="bottom"
+					rendered="#{not empty menuBean.listamenu}" paginator="true"
+					rows="5"
+					paginatorTemplate="	{FirstPageLink}
+					{LastPageLink}
+					{PreviousPageLink}
+					{NextPageLink}
+					{PageLinks}
+					{CurrentPageReport}
+					{RowsPerPageDropdown} "
+					scrollable="true" rowsPerPageTemplate="1, 3, 5"
+					currentPageReportTemplate="Página: ({currentPage}/{totalPages})">
+
+					<f:facet name="header">Menus</f:facet>
+					<p:column headerText="ID">
+						<h:outputLabel value="#{men.id}" />
+					</p:column>
+
+					<p:column headerText="Nombre">
+						<h:outputText value="#{men.nombreOpcion}" />
+					</p:column>
+
+					<p:column headerText="Contenedor">
+						<h:outputLabel
+							value="#{men.nombreOpcion.equals(men.contenedor) ? '-' : men.contenedor}" />
+					</p:column>
+					<p:column headerText="Orden">
+						<h:outputText value="#{men.ordenAparicion}" />
+					</p:column>
+
+					<p:column headerText="Formulario">
+						<h:outputText value="#{men.formularioAsociado}" />
+					</p:column>
+					<p:column headerText="Estado">
+						<h:outputText
+							value="#{men.estado == 1 ? 'HABILITADO' : 'DESHABILITADO'}" />
+					</p:column>
+				</p:dataTable>
+
+			</h:form>
+		</p:dialog>
+		<!-- FIN LISTAR TODO -->
+
+		<!-- LISTAR SUBMENU -->
+		<p:fieldset legend="EDITAR MENÚ" toggleable="true">
+			<h:form id="frm_submenu">
+				<p:growl id="msgs" showDetail="true" />
+				<p:dataTable value="#{menuBean.listaSubmenuEdit}" var="men"
+					id="dt_submenu" editable="true">
+					<f:facet name="header">Menus</f:facet>
+
+					<p:ajax event="rowEdit" listener="#{menuBean.onRowEdit}"
+						update=":frm_submenu:msgs" />
+					<p:ajax event="rowEditCancel" listener="#{menuBean.onRowCancel}"
+						update=":frm_submenu:msgs" />
+
+					<p:column headerText="ID">
+						<h:outputLabel value="#{men.id}" />
+					</p:column>
+
+					<p:column headerText="Nombre">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{men.nombreOpcion}" />
+							</f:facet>
+
+							<f:facet name="input">
+								<p:inputText value="#{men.nombreOpcion}" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Contenedor">
+						<h:outputLabel
+							value="#{men.nombreOpcion.equals(men.contenedor) ? '-' : men.contenedor}" />
+					</p:column>
+					<p:column headerText="Orden">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{men.ordenAparicion}" />
+							</f:facet>
+
+							<f:facet name="input">
+								<p:inputText value="#{men.ordenAparicion}" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Formulario">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{men.formularioAsociado}" />
+							</f:facet>
+
+							<f:facet name="input">
+								<p:inputText value="#{men.formularioAsociado}" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+					<p:column headerText="Estado">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText
+									value="#{men.estado == 1 ? 'HABILITADO' : 'DESHABILITADO'}" />
+							</f:facet>
+
+							<f:facet name="input">
+								<p:selectOneMenu id="text_estado" style="width: 70%;"
+									value="#{menuBean.menu.estado}">
+									<f:selectItem itemLabel="HABILITADO" itemValue="1" />
+									<f:selectItem itemLabel="DESHABILITADO" itemValue="0" />
+								</p:selectOneMenu>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column style="width:32px;text-align: center">
+						<p:rowEditor />
+					</p:column>
+					<p:column style="width:32px;text-align: center">
+						<p:commandButton title="Ver Items" icon="ui-icon-search" ajax="false"
+							onclick="PF('wv_menu_items').show()">
+							<f:ajax listener="#{menuBean.listarItemsEdit(men)}"
+								render=":frm_menu_items :frm_menu_items:dt_item" />
+						</p:commandButton>
+					</p:column>
+				</p:dataTable>
+			</h:form>
+
+		</p:fieldset>
+		<!-- FIN LISTAR SUBMENU -->
+
+		<!-- LISTAR ITEMS -->
+		<p:dialog closeOnEscape="true" widgetVar="wv_menu_items"
+			showEffect="clip" hideEffect="drop" footer="Menus">
+			<h:form id="frm_menu_items">
+				<p:growl id="msgs" showDetail="true" />
+				<p:dataTable value="#{menuBean.listaItemEdit}" var="men"
+					id="dt_item" editable="true">
+					<f:facet name="header">Menus</f:facet>
+
+					<p:ajax event="rowEdit" listener="#{menuBean.onRowEdit}"
+						update=":frm_menu_items:msgs" />
+					<p:ajax event="rowEditCancel" listener="#{menuBean.onRowCancel}"
+						update=":frm_menu_items:msgs" />
+
+					<p:column headerText="ID">
+						<h:outputLabel value="#{men.id}" />
+					</p:column>
+
+					<p:column headerText="Nombre">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{men.nombreOpcion}" />
+							</f:facet>
+
+							<f:facet name="input">
+								<p:inputText value="#{men.nombreOpcion}" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Contenedor">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputLabel
+									value="#{men.nombreOpcion.equals(men.contenedor) ? '-' : men.contenedor}" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+					<p:column headerText="Orden">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{men.ordenAparicion}" />
+							</f:facet>
+
+							<f:facet name="input">
+								<p:inputText value="#{men.ordenAparicion}" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column headerText="Formulario">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText value="#{men.formularioAsociado}" />
+							</f:facet>
+
+							<f:facet name="input">
+								<p:inputText value="#{men.formularioAsociado}" />
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+					<p:column headerText="Estado">
+						<p:cellEditor>
+							<f:facet name="output">
+								<h:outputText
+									value="#{men.estado == 1 ? 'HABILITADO' : 'DESHABILITADO'}" />
+							</f:facet>
+
+							<f:facet name="input">
+								<p:selectOneMenu id="text_estado" style="width: 70%;"
+									value="#{menuBean.menu.estado}">
+									<f:selectItem itemLabel="HABILITADO" itemValue="1" />
+									<f:selectItem itemLabel="DESHABILITADO" itemValue="0" />
+								</p:selectOneMenu>
+							</f:facet>
+						</p:cellEditor>
+					</p:column>
+
+					<p:column style="width:32px;text-align: center">
+						<p:rowEditor />
+					</p:column>
+				</p:dataTable>
+			</h:form>
+		</p:dialog>
+		<!-- FIN LISTAR ITEMS -->
+	</ui:define>
+</ui:composition>
+</html>

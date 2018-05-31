@@ -20,8 +20,8 @@ import sac.millennium.util.Conexion;
 public class UsuarioSqlserverDAOImpl implements IUsuarioDAO {
 
 	private Connection cx;
-	private ResultSet rs = null;
-	private PreparedStatement pstm = null;
+	private ResultSet rs;
+	private PreparedStatement pstm;
 
 	public UsuarioSqlserverDAOImpl() {
 		cx = Conexion.conectar();
