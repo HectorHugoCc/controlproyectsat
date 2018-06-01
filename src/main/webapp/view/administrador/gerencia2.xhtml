@@ -117,11 +117,11 @@
 						</p:selectOneMenu>
 						<p:message for="tipoEstado"></p:message>
 
-						<p:commandButton value="Registrar"
+						<p:commandButton value="Registrar" ajax="false"
 							actionListener="#{gerenciaBean.registra()}"
 							oncomplete="if(!args.validationFailed) PF('gerencia_create').hide()"
 							update="#{gerenciaBean.listarTodo()}" inmediate="true">
-							<p:ajax rendered="listaGerencia:tblGerencia"></p:ajax>
+							<p:ajax rendered="listaGerencia: listaGerencia:tblGerencia"></p:ajax>
 						</p:commandButton>
 
 

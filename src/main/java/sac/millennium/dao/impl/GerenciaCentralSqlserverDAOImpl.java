@@ -60,6 +60,8 @@ public class GerenciaCentralSqlserverDAOImpl implements IGerenciaCentralDAO {
 			pstm.setString(5, obj.getEstado());
 			estado = pstm.executeUpdate();
 			cerrarRecursos();
+			System.out.println("GC_DAO_CREATE: " + estado + " registrado...");
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -137,6 +139,8 @@ public class GerenciaCentralSqlserverDAOImpl implements IGerenciaCentralDAO {
 			if (rs.next()) {
 				id = String.valueOf(fmt.format("%04d", Integer.parseInt(rs.getString("id_gerencia_c")) + 1));
 			}
+			System.out.println("GC_DAO_id: " + id);
+
 			cerrarRecursos();
 			fmt.close();
 		} catch (Exception e) {

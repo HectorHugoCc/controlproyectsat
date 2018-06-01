@@ -11,7 +11,7 @@
 	<ui:define name="body">
 		<!-- LISTAR USUARIO -->
 		<h:form id="frm_lista_usuario">
-			<p:growl id="msgs" showDetail="true" />
+			<p:growl id="msgsss" showDetail="true" />
 			<p:fieldset legend="LISTA USUARIOS">
 				<h:panelGrid columns="6">
 					<p:dataTable var="usuario" value="#{usuarioBean.listaUsuario}"
@@ -213,6 +213,7 @@
 							style="width: 200px;" required="true"
 							requiredMessage="Completar Codigo" />
 						<p:message for="text_cod" />
+					
 
 						<p:outputLabel value="Nombre" for="text_nom" />
 						<p:inputText id="text_nom"
@@ -302,13 +303,13 @@
 							<f:selectItem itemLabel="Deshabilitado" itemValue="0" />
 						</p:selectOneMenu>
 
-						<p:commandButton value="Registrar"
-							actionListener="#{usuarioBean.registrar()}"
+						<p:commandButton value="Registrar" ajax="false"
+							actionListener="#{usuarioBean.registrar()}" 
+							update=":frm_lista_usuario:msgs"
 							oncomplete="if(!args.validationFailed) PF('wv_crear_usuario').hide()"
 							inmediate="true">
-
-							<f:ajax listener="#{menuBean.listarTodo()}"
-								render=":frm_lista_usuario:dt_lista_usuario" />
+							<f:ajax listener="#{usuarioBean.listarTodo()}"
+								render=":frm_lista_usuario :frm_lista_usuario:dt_lista_usuario" />
 						</p:commandButton>
 					</h:panelGrid>
 				</p:fieldset>

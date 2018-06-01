@@ -78,7 +78,9 @@ public class MenuBean implements Serializable {
 
 	public void guardar() {
 		System.out.println("MENU_BEAN>>Guardando..." + this.menu);
+
 		servMenu.create(menu);
+
 		FacesContext.getCurrentInstance().addMessage(null,
 				new FacesMessage(FacesMessage.SEVERITY_INFO, "Informacion", "Registrado"));
 	}

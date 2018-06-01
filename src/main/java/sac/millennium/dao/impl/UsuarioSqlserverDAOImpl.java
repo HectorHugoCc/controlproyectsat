@@ -242,6 +242,8 @@ public class UsuarioSqlserverDAOImpl implements IUsuarioDAO {
 			if (rs.next()) {
 				id = String.valueOf(fmt.format("%05d", Integer.parseInt(rs.getString("id_usuario")) + 1));
 			}
+
+			System.out.println("daoImpl_is: " + id);
 			cerrarRecursos();
 			fmt.close();
 		} catch (Exception e) {

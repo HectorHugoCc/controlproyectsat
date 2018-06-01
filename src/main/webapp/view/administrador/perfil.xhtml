@@ -113,7 +113,7 @@
 
 				<h:inputHidden value="#{perfilBean.perfilSeleccionado.id}" />
 
-				<p:fieldset legend="Crear Perfil">
+				<p:fieldset legend="Crear Perfil" id="panel">
 					<h:panelGrid columns="3">
 
 						<f:facet name="header">Crear Perfil</f:facet>
@@ -140,11 +140,14 @@
 						</p:selectOneMenu>
 
 						<p:commandButton value="Registrar" ajax="false"
-							actionListener="#{perfilBean.registra}"
+							actionListener="#{perfilBean.registra()}"
 							oncomplete="if(!args.validationFailed) PF('perfil_create').hide()"
-							update="#{perfilBean.listarTodo()}">
+							update="#{perfilBean.listarTodo()}" inmediate="true">
 							<p:ajax rendered=":listaPerfil :listaPerfil:perfildt"></p:ajax>
 						</p:commandButton>
+
+		
+
 					</h:panelGrid>
 				</p:fieldset>
 			</h:form>

@@ -17,6 +17,7 @@
 			<p:fieldset legend="CREAR MENÚ" toggleable="true" toggleSpeed="500"
 				style="margin-bottom:20px">
 				<h:panelGrid columns="4" cellpadding="5">
+				
 					<p:outputLabel for="txt_nombre" value="Nombre:"
 						style="font-weight:bold" />
 					<p:inputText id="txt_nombre" value="#{menuBean.menu.nombreOpcion}"
@@ -73,12 +74,13 @@
 						actionListener="#{menuBean.guardar()}" update=":frm_crear_menu:msgs">
 						<f:ajax listener="#{menuBean.listarPadres()}" render="cbo_padres" />
 						<f:ajax listener="#{menuBean.listarHermanos()}" render="cbo_orden" />
+							<f:ajax	render=":frm_menu_items :frm_menu_items:dt_item"/>
 					</p:commandButton>
 
 					<p:commandButton value="Ver Menus" type="button"
 						onclick="PF('wv_lista_menu').show()" style="font-weight:bold">
 						<f:ajax listener="#{menuBean.listarTodo()}"
-							render=":frm_lista_menu" />
+							render=":frm_lista_menu"/>
 					</p:commandButton>
 				</h:panelGrid>
 			</p:fieldset>

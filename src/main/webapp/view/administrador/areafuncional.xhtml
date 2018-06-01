@@ -143,12 +143,12 @@
 						<p:message for="tipoEstado"></p:message>
 					
 					
-					<p:commandButton value="Registrar"
+					<p:commandButton value="Registrar" ajax="false"
 							actionListener="#{areaFuncionalBean.registrar()}"
 							oncomplete="if(!args.validationFailed) PF('areaFunc_create').hide()"
 							update="#{areaFuncionalBean.listarTodo()}"
 							inmediate="true">
-							<p:ajax rendered=":listaAreaFuncional:tblAreaFunc"></p:ajax>
+							<p:ajax rendered=":listaAreaFuncional :listaAreaFuncional:tblAreaFunc"></p:ajax>
 						</p:commandButton>
 					
 			

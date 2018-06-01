@@ -54,6 +54,8 @@ public class PerfilBean implements Serializable {
 				+ "--" + perfilSeleccionado.getDescripcionCorta() + "--" + perfilSeleccionado.getEstado());
 
 		servPerfil.create(perfilSeleccionado);
+
+		perfilSeleccionado = new Perfil();
 	}
 
 	public void elimina() {
@@ -65,6 +67,7 @@ public class PerfilBean implements Serializable {
 	}
 
 	public List<Perfil> getListaPerfil() {
+		listaPerfil = servPerfil.findAll();
 		return listaPerfil;
 	}
 
@@ -102,5 +105,10 @@ public class PerfilBean implements Serializable {
 			FacesContext.getCurrentInstance().addMessage(null, msg);
 		}
 	}
+
+	/*
+	 * public void reset() {
+	 * PrimeFaces.current().resetInputs(":crearPerfil :crearPerfil:panel"); }
+	 */
 
 }

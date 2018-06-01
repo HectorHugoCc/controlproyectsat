@@ -53,6 +53,8 @@ public class GerenciaBean implements Serializable {
 		gerenciaSeleccionada.setGerenciaCentral(gece);
 
 		servGerencia.create(gerenciaSeleccionada);
+
+		gerenciaSeleccionada = new Gerencia();
 	}
 
 	public List<Gerencia> getListaGerencia() {

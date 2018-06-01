@@ -161,9 +161,9 @@
 						<p:message for="tipoEstado"></p:message>
 
 						<p:commandButton value="Registrar" ajax="false"
-							actionListener="#{gerenciaCentralBean.registra()}"
+							actionListener="#{gerenciaCentralBean.registrar()}"
 							oncomplete="if(!args.validationFailed) PF('geCentral_create').hide()"
-							update="#{gerenciaCentralBean.listarTodo()}" inmediate="true">
+							update="#{gerenciaCentralBean.listarTodo()}">
 							<p:ajax rendered=":listaGerenciaCentral :listaGerenciaCentral:tblGerCentral"></p:ajax>
 						</p:commandButton>
 					</h:panelGrid>

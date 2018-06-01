@@ -60,6 +60,8 @@ public class TemaBean implements Serializable {
 
 		servTema.create(tema);
 
+		tema = new Tema();
+
 	}
 
 	public void listarTodo() {

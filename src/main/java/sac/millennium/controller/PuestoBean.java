@@ -9,7 +9,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ActionEvent;
 
 import org.primefaces.event.CellEditEvent;
 import org.primefaces.event.RowEditEvent;
@@ -54,6 +53,8 @@ public class PuestoBean implements Serializable {
 				+ "--" + puestoSeleccionado.getDescripcionCorta() + "--" + puestoSeleccionado.getEstado());
 
 		servPuesto.create(puestoSeleccionado);
+
+		puestoSeleccionado = new Puesto();
 	}
 
 	public Puesto getPuestoSeleccionado() {

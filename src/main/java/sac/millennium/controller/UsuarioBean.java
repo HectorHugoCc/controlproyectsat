@@ -134,7 +134,6 @@ public class UsuarioBean implements Serializable {
 
 	public void buscar() {
 
-	
 		// usuarioSeleccionado = new Usuario();
 
 		usuarioSeleccionado = (Usuario) dtFila.getRowData();
@@ -168,6 +167,10 @@ public class UsuarioBean implements Serializable {
 		usuarioSeleccionado.setPuesto(pu);
 
 		servUsuario.create(usuarioSeleccionado);
+
+		System.out.println("usuarioBean " + usuarioSeleccionado.getId() + "-" + usuarioSeleccionado.getCodigo());
+
+		usuarioSeleccionado = new Usuario();
 	}
 
 	public void nuevo() {
@@ -183,6 +186,7 @@ public class UsuarioBean implements Serializable {
 	}
 
 	public List<Usuario> getListaUsuario() {
+		listaUsuario = servUsuario.findAll();
 		return listaUsuario;
 	}
 

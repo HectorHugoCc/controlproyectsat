@@ -27,7 +27,7 @@ public class GerenciaCentralBean implements Serializable {
 	private IGerenciaCentralService servGerenciaCentral = new GerenciaCentralServiceImpl(daoGerenciaCentral);
 
 	private List<GerenciaCentral> listaGerenciaCentral = new ArrayList<>();
-	private GerenciaCentral gerenciaCentralSeleccionado;
+	private GerenciaCentral gerenciaCentralSeleccionado = new GerenciaCentral();
 
 	public GerenciaCentralBean() {
 		gerenciaCentralSeleccionado = new GerenciaCentral();
@@ -37,10 +37,13 @@ public class GerenciaCentralBean implements Serializable {
 		listaGerenciaCentral = servGerenciaCentral.findAll();
 	}
 
-	public void registra() {
+	public void registrar() {
 		System.out.println(
 				"==>" + gerenciaCentralSeleccionado.getId() + "-" + gerenciaCentralSeleccionado.getCodigoPropio());
+
 		servGerenciaCentral.create(gerenciaCentralSeleccionado);
+
+		// gerenciaCentralSeleccionado = new GerenciaCentral();
 	}
 
 	public void leer() {
@@ -69,7 +72,7 @@ public class GerenciaCentralBean implements Serializable {
 
 	public void onRowEdit(RowEditEvent event) {
 		servGerenciaCentral.update((GerenciaCentral) event.getObject());
-		FacesMessage msg = new FacesMessage("Car Edited", ((GerenciaCentral) event.getObject()).getId());
+		FacesMessage msg = new FacesMessage("Central Edited");
 		FacesContext.getCurrentInstance().addMessage(null, msg);
 	}
 
